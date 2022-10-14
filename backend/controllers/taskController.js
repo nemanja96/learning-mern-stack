@@ -32,7 +32,18 @@ const setTask = asyncHandler(async (req, res) => {
 // @route   PUT /api/tasks/:id
 // @access  Private
 const updateTask = asyncHandler(async (req, res) => {
-    res.status(200).send("Update Task");
+    
+    const task = await Task.findById(req.params.id);
+
+    if(!task) {
+        res.status(400)
+        throw new Error('Task not found')
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {new: true});
+
+    res.status(200).json(updatedTask);
+
 })
 
 // @desc    Delete task
