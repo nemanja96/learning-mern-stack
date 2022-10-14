@@ -15,7 +15,17 @@ const getTasks = asyncHandler(async (req, res) => {
 // @route   POST /api/tasks
 // @access  Private
 const setTask = asyncHandler(async (req, res) => {
+    let task = await Task.findOne({ text: req.body.text });
 
+    if(task) {
+        return res.status(400).send('That task already exist')
+    } else {
+        task = new Task({
+            text: req.body.text
+        });
+        await task.save();
+        res.status(200).send(task);
+    }
 })
 
 // @desc    Update task
